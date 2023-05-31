@@ -1,0 +1,161 @@
+---
+title: "DHF"
+author: "Vasileios Stavropoulos Dylan Poulus"
+date: "`r Sys.Date()`"
+output: html_document
+---
+Imort the library/ Packanges
+```{r setup, include=FALSE}
+message=FALSE
+echo=FALSE
+warnings=FALSE
+error=FALSE
+suppressWarnings({
+  
+  suppressMessages({
+  
+library(tidyverse)
+library(tidymodels)
+library(purrr)
+library(haven)
+library(scales)
+library(ggpubr)
+library(patchwork)
+library(psych)
+library(rstatix)
+library(rcompanion)
+library(broom)
+library(knitr)
+library(readr)
+library(here)
+library(psych)
+library(officer)
+library(ggplot2)
+library(dplyr)
+library(broom.mixed) 
+library(dotwhisker)  
+library(rstanarm)
+library(agua)
+library(parsnip)
+library(plyr)
+library(themis)
+library(DMwR)
+library(naivebayes)
+library(yardstick)
+library(vip)
+library(palmerpenguins)
+library(nnet)
+library(Metrics)
+library(kernlab)
+library(e1071)
+library(usethis)
+library(devtools)
+library(discrim)
+library(ranger) 
+library(git4r)
+library(ggfortify)
+library(caret)
+library(doParallel) 
+library(dials) 
+    
+  
+})
+})
+knitr::opts_chunk$set(echo = TRUE)
+```
+Import and prepare data for the analyses
+```{r}
+message=FALSE
+echo=FALSE
+warnings=FALSE
+error=FALSE
+suppressWarnings({
+  
+  options(scipen = 9999, digits=3, max.print=999999, show.signif.stars=TRUE)
+  
+  data<-read_sav("C:/Users/vasil/Desktop/DHF/DHF/DHFF.sav")
+  
+  
+  data1<-data[c("Age_W1", "Yearsofplay_W1","Averagetime_weekday_W1","Averagetime_weekend_W1", "Avatar_no_W1","PresenceQ1_W1", "PresenceQ2_W1", "PresenceQ3_W1", "PresenceQ4_W1", "PresenceQ5_W1", "PresenceQ6_W1", "PresenceQ7_W1", "PresenceQ8_W1", "PresenceQ9_W1", "PresenceQ10_W1","PresenceQ11_W1", "PresenceQ12_W1", "PresenceQ13_W1", "PresenceQ14_W1","FlowQ1_W1", "FlowQ2_W1", "FlowQ3_W1", "FlowQ4_W1", "FlowQ5_W1", "UABQ1_W1", "UABQ2_W1", "UABQ3_W1", "UABQ4_W1", "UABQ5_W1", "UABQ6_W1", "UABQ7_W1", "UABQ8_W1", "UABQ9_W1", "UABQ10_W1","UABQ11_W1", "UABQ12_W1", "UABQ13_W1", "PEQ_Q1_W1", "PEQ_Q2_W1", "PEQ_Q3_W1", "PEQ_Q4_W1", "PEQ_Q5_W1", "PEQ_Q6_W1","GD_Q1_W2", "GD_Q2_W2", "GD_Q3_W2", "GD_Q4_W2", "IGD9_Q1_W2", "IGD9_Q2_W2", "IGD9_Q3_W2","IGD9_Q4_W2","IGD9_Q5_W2", "IGD9_Q6_W2","IGD9_Q7_W2", "IGD9_Q8_W2", "IGD9_Q9_W2", "DASS_Q1_W2", "DASS_Q2_W2","DASS_Q3_W2",
+"DASS_Q4_W2", "DASS_Q5_W2", "DASS_Q6_W2" ,"DASS_Q7_W2", "DASS_Q8_W2","DASS_Q9_W2","DASS_Q10_W2","DASS_Q11_W2","DASS_Q12_W2","DASS_Q13_W2","DASS_Q14_W2","DASS_Q15_W2","DASS_Q16_W2","DASS_Q17_W2","DASS_Q18_W2","DASS_Q19_W2","DASS_Q20_W2","DASS_Q21_W2","PEQ_Q1_W2","PEQ_Q2_W2","PEQ_Q3_W2","PEQ_Q4_W2","PEQ_Q5_W2","PEQ_Q6_W2")]
+  
+DataN<-data1%>%mutate(GD_Q1_W2=case_when(GD_Q1_W2>2~1,
+                                      GD_Q1_W2<3~0,
+                                      TRUE~NA_real_),
+                       GD_Q2_W2=case_when(GD_Q2_W2>2~1,
+                                      GD_Q2_W2<3~0,
+                                      TRUE~NA_real_),
+                       GD_Q3_W2=case_when(GD_Q3_W2>2~1,
+                                      GD_Q3_W2<3~0,
+                                      TRUE~NA_real_),
+                       GD_Q4_W2=case_when(GD_Q4_W2>2~1,
+                                      GD_Q4_W2<3~0,
+                                      TRUE~NA_real_),
+                       IGD9_Q1_W2=case_when(IGD9_Q1_W2>2~1,
+                                      IGD9_Q1_W2<3~0,
+                                      TRUE~NA_real_),
+                       IGD9_Q2_W2=case_when(IGD9_Q2_W2>2~1,
+                                      IGD9_Q2_W2<3~0,
+                                      TRUE~NA_real_),
+                       IGD9_Q3_W2=case_when(IGD9_Q3_W2>2~1,
+                                      IGD9_Q3_W2<3~0,
+                                      TRUE~NA_real_),
+                       IGD9_Q4_W2=case_when(IGD9_Q4_W2>2~1,
+                                      IGD9_Q4_W2<3~0,
+                                      TRUE~NA_real_),
+                       IGD9_Q5_W2=case_when(IGD9_Q5_W2>2~1,
+                                      IGD9_Q5_W2<3~0,
+                                      TRUE~NA_real_),
+                       IGD9_Q6_W2=case_when(IGD9_Q6_W2>2~1,
+                                      IGD9_Q6_W2<3~0,
+                                      TRUE~NA_real_),
+                       IGD9_Q7_W2=case_when(IGD9_Q7_W2>2~1,
+                                      IGD9_Q7_W2<3~0,
+                                      TRUE~NA_real_),
+                       IGD9_Q8_W2=case_when(IGD9_Q8_W2>2~1,
+                                      IGD9_Q8_W2<3~0,
+                                      TRUE~NA_real_),
+                       IGD9_Q9_W2=case_when(IGD9_Q9_W2>2~1,
+                                      IGD9_Q9_W2<3~0,
+                                      TRUE~NA_real_))
+DataM<-DataN%>%mutate(GDTTotal=GD_Q1_W2+GD_Q2_W2+GD_Q3_W2+GD_Q4_W2)%>%mutate(IGDTTotal=IGD9_Q1_W2+IGD9_Q9_W2+IGD9_Q3_W2+IGD9_Q4_W2+IGD9_Q5_W2+IGD9_Q6_W2+IGD9_Q7_W2+IGD9_Q8_W2+IGD9_Q9_W2)%>%mutate(PQTotal=PresenceQ1_W1+PresenceQ2_W1+PresenceQ3_W1+PresenceQ4_W1+PresenceQ5_W1+PresenceQ6_W1+PresenceQ7_W1+PresenceQ8_W1+PresenceQ9_W1+PresenceQ10_W1+PresenceQ11_W1+PresenceQ12_W1+PresenceQ13_W1+PresenceQ14_W1)%>%mutate(FTotal=FlowQ1_W1+FlowQ2_W1+FlowQ3_W1+FlowQ4_W1+FlowQ5_W1)%>%mutate(IDTotal=UABQ1_W1+UABQ2_W1+UABQ3_W1+UABQ4_W1)%>%mutate(IMTotal=UABQ5_W1+UABQ6_W1+UABQ7_W1+UABQ8_W1+UABQ9_W1)%>%mutate(COMPTotal=UABQ10_W1+UABQ11_W1+UABQ12_W1)%>%mutate(PETotal1=PEQ_Q1_W1+PEQ_Q2_W1+PEQ_Q3_W1+PEQ_Q4_W1+PEQ_Q5_W1+PEQ_Q6_W1)%>%mutate(PETotal2=PEQ_Q1_W2+PEQ_Q2_W2+PEQ_Q3_W2+PEQ_Q4_W2+PEQ_Q5_W2+PEQ_Q6_W2)%>%mutate(PETotal2=PEQ_Q1_W2+PEQ_Q2_W2+PEQ_Q3_W2+PEQ_Q4_W2+PEQ_Q5_W2+PEQ_Q6_W2)%>%mutate(DEPTot=DASS_Q3_W2+DASS_Q5_W2+DASS_Q10_W2+DASS_Q13_W2+DASS_Q16_W2+DASS_Q17_W2+DASS_Q21_W2)%>%mutate(AnxTot=DASS_Q2_W2+DASS_Q4_W2+DASS_Q7_W2+DASS_Q9_W2+DASS_Q15_W2+DASS_Q19_W2+DASS_Q20_W2)%>%mutate(StressTot=DASS_Q1_W2+DASS_Q6_W2+DASS_Q8_W2+DASS_Q11_W2+DASS_Q12_W2+DASS_Q14_W2+DASS_Q18_W2)
+DATAAIGD<-DataM[c("Age_W1", "Yearsofplay_W1", "GDTTotal", "IDTotal", "IMTotal", "COMPTotal", "PETotal1", "PQTotal", "FTotal")]
+DATAAIIGD<-DataM[c("Age_W1", "Yearsofplay_W1", "IDTotal", "IMTotal", "COMPTotal", "PETotal1", "PQTotal", "FTotal","IGDTTotal")]
+GDTD<-na.omit(DATAAIGD)
+IGDD<-na.omit(DATAAIIGD)
+GDTD<-GDTD%>%mutate(GDTTotal=case_when(GDTTotal==4~1,
+                                       GDTTotal==3~1,
+                                      GDTTotal<3~0,
+                                      TRUE~NA_real_))
+GDTD<-GDTD %>% 
+  mutate(GDTTotal = case_when(GDTTotal == 1 ~ "Yes",
+                             GDTTotal == 0 ~ "No"))
+IGDD<-IGDD%>%mutate(IGDTTotal=case_when(IGDTTotal==9~1,
+                                       IGDTTotal==8~1,
+                                       IGDTTotal==7~1,
+                                       IGDTTotal==6~1,
+                                       IGDTTotal==5~1,
+                                      IGDTTotal<5~0,
+                                      TRUE~NA_real_))
+IGDD<-IGDD %>% 
+  mutate(IGDTTotal = case_when(IGDTTotal == 1 ~ "Yes",
+                             IGDTTotal == 0 ~ "No"))
+
+  GDTDiag<-GDTD%>%setNames(c("AGE", "Gameyears","GDDiag", "IDTotal", "IMTotal", "COMPTotal", "PETotal","PQTotal", "FTotal")) 
+  IGDDiag<-IGDD%>%setNames(c("AGE", "Gameyears", "IDTotal", "IMTotal", "COMPTotal", "PETotal", "PQTotal", "FTotal","IGDDiag"))
+  WHOT<-table(GDTDiag$GDDiag)
+  APAT<-table(IGDDiag$IGDDiag)
+}) 
+```
+
+Compare WHO and APA Classifications 
+```{r}
+ComparisonWHOandAPA<-rbind(WHOT, APAT)
+  kable(ComparisonWHOandAPA)
+  
+  ChiSqu<-chisq.test(ComparisonWHOandAPA)
+  Cram<-cramer_v(ComparisonWHOandAPA)
+  
+  ChiSqu
+  Cram
+```
