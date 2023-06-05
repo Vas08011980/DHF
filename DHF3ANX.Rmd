@@ -188,7 +188,7 @@ echo=FALSE
 error=FALSE
 warning=FALSE
 options(scipen = 999, digits=3, max.print=999999, show.signif.stars=TRUE)
-GDTDiag$GDDiag=as_factor(GDTDiag$GDDiag)
+
 suppressWarnings({
   
   suppressMessages({
